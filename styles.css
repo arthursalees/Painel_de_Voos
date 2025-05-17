@@ -1,0 +1,236 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    background: #0f172a;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: #0f172a;
+    padding: 1rem;
+    border-bottom: 1px solid #1e293b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo h1 {
+    font-size: 1.875rem;
+    font-weight: bold;
+}
+
+.current-time {
+    background: #1e293b;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #334155;
+    font-family: monospace;
+    font-size: 1.125rem;
+}
+
+main {
+    flex: 1;
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.add-flight-btn {
+    background: #2563eb;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.add-flight-btn:hover {
+    background: #1d4ed8;
+}
+
+.flight-table {
+    width: 100%;
+    border: 1px solid #1e293b;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #0f172a;
+}
+
+.flight-table th {
+    background: #1e293b;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.flight-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #1e293b;
+}
+
+.flight-table tr:hover {
+    background: #1e293b;
+    cursor: pointer;
+}
+
+.flight-row {
+    transition: background 0.2s;
+}
+
+.flight-row.new {
+    animation: highlight 2s ease-out;
+}
+
+@keyframes highlight {
+    0% { background: rgba(37, 99, 235, 0.2); }
+    100% { background: transparent; }
+}
+
+.status {
+    font-weight: 500;
+}
+
+.status-partida { color: #3b82f6; }
+.status-em-voo { color: #0ea5e9; }
+.status-aterrissado { color: #22c55e; }
+.status-cancelado { color: #ef4444; }
+.status-atrasado { color: #f59e0b; }
+.status-embarque { color: #6366f1; }
+.status-desembarque { color: #a855f7; }
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: #1e293b;
+    border-radius: 0.5rem;
+    max-width: 28rem;
+    width: 100%;
+    position: relative;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #334155;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.close-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin-bottom: 0.25rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: #334155;
+    border: 1px solid #475569;
+    border-radius: 0.375rem;
+    color: #fff;
+}
+
+.btn-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-secondary {
+    background: #334155;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: #475569;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+footer {
+    background: #0f172a;
+    border-top: 1px solid #1e293b;
+    padding: 0.75rem;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.875rem;
+}
