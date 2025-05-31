@@ -1,9 +1,11 @@
+//Inclusão de Bibliotecas
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define LIMITE_VOOS 15
 
+//Definição das Cores dos Status pelo Código ANSI
 #define RESET   "\033[0m"
 #define VERMELHO "\033[31m"
 #define VERDE   "\033[32m"
