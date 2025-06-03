@@ -5,7 +5,7 @@
 
 #define LIMITE_VOOS 15
 
-//Definição das Cores dos Status pelo Código ANSI
+//Definição das Cores para os Status pelo Código ANSI
 #define RESET   "\033[0m"
 #define VERMELHO "\033[31m"
 #define VERDE   "\033[32m"
@@ -15,6 +15,7 @@
 #define CIANO   "\033[36m"
 #define BRANCO  "\033[37m"
 
+//Estrutura: Define como um voo é armazenado:
 typedef struct {
     int numero;
     char companhia[20];
@@ -24,21 +25,24 @@ typedef struct {
     char status[15];
 } Voo;
 
+//Estrutura da Lista Encadeada:
 typedef struct nodo {
     Voo voo;
     struct nodo* link;
 } nodo;
 
-// Função auxiliar para comparar horários (formato HH:MM)
+// Função para comparar as Horas
+//Separar as Horas e Minutos:
 int compararHora(const char* h1, const char* h2) {
     int hora1, min1, hora2, min2;
     sscanf(h1, "%d:%d", &hora1, &min1);
     sscanf(h2, "%d:%d", &hora2, &min2);
+    //Compara as Horas
     if (hora1 != hora2) return hora1 - hora2;
     return min1 - min2;
-}
+} 
 
-// Cor do status
+// Função para definir a Cor dos Status
 const char* corStatus(const char* status) {
     if (strcmp(status, "Partida") == 0) return AMARELO;
     if (strcmp(status, "Em voo") == 0) return CIANO;
@@ -56,12 +60,14 @@ void inserirOrdenado(nodo** inicio, Voo novoVoo) {
     novo->voo = novoVoo;
     novo->link = NULL;
 
+    //Função para achar o lugar correto na Lista através da Hora
     nodo *anterior = NULL, *aux = *inicio;
     while (aux != NULL && compararHora(novoVoo.hora, aux->voo.hora) > 0) {
         anterior = aux;
         aux = aux->link;
     }
 
+    //Insere o novo voo na posição encontrada
     if (anterior == NULL) {
         novo->link = *inicio;
         *inicio = novo;
