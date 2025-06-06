@@ -1,4 +1,3 @@
-//Inclusão de Bibliotecas
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,12 +31,10 @@ typedef struct nodo {
 } nodo;
 
 // Função para comparar as Horas
-//Separar as Horas e Minutos:
 int compararHora(const char* h1, const char* h2) {
     int hora1, min1, hora2, min2;
     sscanf(h1, "%d:%d", &hora1, &min1);
     sscanf(h2, "%d:%d", &hora2, &min2);
-    //Compara as Horas
     if (hora1 != hora2) return hora1 - hora2;
     return min1 - min2;
 } 
@@ -60,14 +57,12 @@ void inserirOrdenado(nodo** inicio, Voo novoVoo) {
     novo->voo = novoVoo;
     novo->link = NULL;
 
-    //Função para achar o lugar correto na Lista através da Hora
     nodo *anterior = NULL, *aux = *inicio;
     while (aux != NULL && compararHora(novoVoo.hora, aux->voo.hora) > 0) {
         anterior = aux;
         aux = aux->link;
     }
 
-    //Insere o novo voo na posição encontrada
     if (anterior == NULL) {
         novo->link = *inicio;
         *inicio = novo;
@@ -76,7 +71,6 @@ void inserirOrdenado(nodo** inicio, Voo novoVoo) {
         novo->link = aux;
     }
 
-    // Verifica se excedeu o limite de 15 voos
     int contador = 0;
     aux = *inicio;
     nodo* anteriorUltimo = NULL;
@@ -94,7 +88,7 @@ void inserirOrdenado(nodo** inicio, Voo novoVoo) {
 }
 
 void exibirPainel(nodo* inicio) {
-    printf("\033[H\033[J"); // Limpa terminal (Linux)
+    printf("\033[H\033[J");
     printf("\n%-6s %-6s %-15s %-20s %-6s %-15s\n", 
         "Hora", "Voo", "Companhia", "Destino", "Portao", "Status");
     printf("-------------------------------------------------------------------------------\n");
@@ -189,6 +183,15 @@ void preencherVoosIniciais(nodo** lista) {
     for (int i = 0; i < 10; i++) inserirOrdenado(lista, voos[i]);
 }
 
+int vooExiste(nodo* inicio, int numero) {
+    nodo* aux = inicio;
+    while (aux != NULL) {
+        if (aux->voo.numero == numero) return 1;
+        aux = aux->link;
+    }
+    return 0;
+}
+
 int main() {
     nodo* lista = NULL;
     preencherVoosIniciais(&lista);
@@ -201,12 +204,22 @@ int main() {
 
         if (opcao == 'A' || opcao == 'a') {
             Voo novo;
-            printf("Numero do voo: "); scanf("%d", &novo.numero); getchar();
+
+            do {
+                printf("Numero do voo: ");
+                scanf("%d", &novo.numero); getchar();
+                if (vooExiste(lista, novo.numero)) {
+                    printf("%s[Voo existente]%s Tente outro número.\n", VERMELHO, RESET);
+                }
+            } while (vooExiste(lista, novo.numero));
+
             printf("Companhia: "); fgets(novo.companhia, 20, stdin); strtok(novo.companhia, "\n");
             printf("Destino: "); fgets(novo.destino, 30, stdin); strtok(novo.destino, "\n");
             printf("Portao: "); scanf("%d", &novo.portao); getchar();
             printf("Hora (HH:MM): "); fgets(novo.hora, 6, stdin); getchar(); strtok(novo.hora, "\n");
-            printf("Status (Partida, Em voo, Aterrissado, Cancelado, Atrasado, Embarque, Desembarque): "); fgets(novo.status, 15, stdin); strtok(novo.status, "\n");
+            printf("Status (Partida, Em voo, Aterrissado, Cancelado, Atrasado, Embarque, Desembarque): ");
+            fgets(novo.status, 15, stdin); strtok(novo.status, "\n");
+
             inserirOrdenado(&lista, novo);
         }
         else if (opcao == 'I' || opcao == 'i') {
