@@ -92,7 +92,7 @@ void exibirPainel(nodo* inicio) {
     printf("\033[H\033[J");
     printf(NEGRITO VERMELHO "\n\t\t\t\tPAINEL DE VOOS" RESET );
     printf("\n" BRANCO "|---------------------------------------------------------------------------------|\n");
-    printf("| Hora  | Voo   | Companhia       | Destino              | Porta | Status         |\n");
+    printf("| Hora  | Voo   | Companhia       | Destino              | Portão | Status        |\n");
     printf("|-------|-------|-----------------|----------------------|-------|----------------|\n" RESET);
 
     nodo* aux = inicio;
@@ -189,12 +189,12 @@ void excluirVoo(nodo** inicio, int numero) {
 void preencherVoosIniciais(nodo** lista) {
     Voo voos[7] = {
         {1001, "AZUL", "Fortaleza", 16, "08:20", "Partida"},
-        {1003, "VOEPASS", "Belem", 9, "11:36", "Aterrissado"},
-        {1004, "AZUL", "Belem", 1, "15:32", "Partida"},
-        {1006, "VOEPASS", "Curitiba", 7, "10:54", "Aterrissado"},
-        {1007, "GOL", "Salvador", 12, "11:44", "Aterrissado"},
-        {1008, "LATAM", "Belem", 2, "14:32", "Em voo"},
-        {1009, "AZUL", "Porto Alegre", 6, "21:20", "Cancelado"}
+        {1003, "LATAM", "Belem", 9, "11:30", "Aterrissado"},
+        {1004, "AZUL", "Belem", 1, "15:30", "Partida"},
+        {1006, "GOL", "Curitiba", 7, "10:00", "Aterrissado"},
+        {1007, "GOL", "Salvador", 12, "11:45", "Aterrissado"},
+        {1008, "LATAM", "Belem", 2, "14:30", "Em voo"},
+        {1009, "AZUL", "Porto Alegre", 6, "21:00", "Cancelado"}
     };
     for (int i = 0; i < 7; i++) inserirOrdenado(lista, voos[i]);
 }
