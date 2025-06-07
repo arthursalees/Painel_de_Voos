@@ -4,17 +4,18 @@
 
 #define LIMITE_VOOS 10
 
-//Definicao das Cores para os Status pelo Codigo ANSI
+// Códigos ANSI para cores e estilo
 #define RESET   "\033[0m"
-#define VERMELHO "\033[31m"
-#define VERDE   "\033[32m"
-#define AMARELO "\033[33m"
-#define AZUL    "\033[34m"
-#define MAGENTA "\033[35m"
-#define CIANO   "\033[36m"
-#define BRANCO  "\033[37m"
+#define VERMELHO "\033[1;31m"
+#define VERDE   "\033[1;32m"
+#define AMARELO "\033[1;33m"
+#define AZUL    "\033[1;34m"
+#define MAGENTA "\033[1;35m"
+#define CIANO   "\033[1;36m"
+#define BRANCO  "\033[1;37m"
+#define NEGRITO "\033[1m"
 
-//Estrutura: Define como um voo e armazenado:
+// Estrutura de dados
 typedef struct {
     int numero;
     char companhia[20];
@@ -24,22 +25,21 @@ typedef struct {
     char status[15];
 } Voo;
 
-//Estrutura da Lista Encadeada:
 typedef struct nodo {
     Voo voo;
     struct nodo* link;
 } nodo;
 
-// Funcao para comparar as Horas 
+// Comparar horários
 int compararHora(const char* h1, const char* h2) {
     int hora1, min1, hora2, min2;
     sscanf(h1, "%d:%d", &hora1, &min1);
     sscanf(h2, "%d:%d", &hora2, &min2);
     if (hora1 != hora2) return hora1 - hora2;
     return min1 - min2;
-} 
+}
 
-// Funcao para definir a Cor dos Status
+// Cores para status
 const char* corStatus(const char* status) {
     if (strcmp(status, "Partida") == 0) return AMARELO;
     if (strcmp(status, "Em voo") == 0) return CIANO;
@@ -51,7 +51,7 @@ const char* corStatus(const char* status) {
     return RESET;
 }
 
-// Insercao ordenada por horario
+// Inserção ordenada
 void inserirOrdenado(nodo** inicio, Voo novoVoo) {
     nodo* novo = (nodo*)malloc(sizeof(nodo));
     novo->voo = novoVoo;
@@ -80,17 +80,20 @@ void inserirOrdenado(nodo** inicio, Voo novoVoo) {
 
     if (contador > LIMITE_VOOS) {
         nodo* remover = *inicio;
-        printf("\n[Voo removido] O voo das %s para %s saiu da tabela.\n", remover->voo.hora, remover->voo.destino);
+        printf(VERMELHO "\n[Voo removido]" RESET " O voo das %s para %s saiu da tabela.\n",
+               remover->voo.hora, remover->voo.destino);
         *inicio = remover->link;
         free(remover);
     }
 }
 
+// Exibir painel
 void exibirPainel(nodo* inicio) {
     printf("\033[H\033[J");
-    printf("\n|---------------------------------------------------------------------------------|\n");
+    printf(NEGRITO VERMELHO "\n\t\t\t\tPAINEL DE VOOS" RESET );
+    printf("\n" BRANCO "|---------------------------------------------------------------------------------|\n");
     printf("| Hora  | Voo   | Companhia       | Destino              | Porta | Status         |\n");
-    printf("|-------|-------|-----------------|----------------------|-------|----------------|\n");
+    printf("|-------|-------|-----------------|----------------------|-------|----------------|\n" RESET);
 
     nodo* aux = inicio;
     while (aux != NULL) {
@@ -99,36 +102,37 @@ void exibirPainel(nodo* inicio) {
             aux->voo.destino, aux->voo.portao, corStatus(aux->voo.status), aux->voo.status, RESET);
         aux = aux->link;
     }
-    printf("|---------------------------------------------------------------------------------|\n");
+    printf(BRANCO "|---------------------------------------------------------------------------------|\n" RESET);
 }
 
+// Mostrar voo
 void mostrarVoo(nodo* inicio, int numero) {
     exibirPainel(inicio);
-    printf("\n--------------------------------------------------------------------------\n");
-    printf("\nInformacoes do Voo Selecionado:\n");
+    printf(NEGRITO "\n\nInformações do Voo Selecionado:\n" RESET);
 
     nodo* aux = inicio;
     while (aux != NULL) {
         if (aux->voo.numero == numero) {
-            printf("\n[Voo %d]\nHora: %s\nCompanhia: %s\nDestino: %s\nPortao: %d\nStatus: %s%s%s\n",
+            printf("\n[Voo %d]\nHora: %s\nCompanhia: %s\nDestino: %s\nPortão: %d\nStatus: %s%s%s\n",
                    aux->voo.numero, aux->voo.hora, aux->voo.companhia,
                    aux->voo.destino, aux->voo.portao, corStatus(aux->voo.status), aux->voo.status, RESET);
             break;
         }
         aux = aux->link;
     }
-    if (aux == NULL) printf("\nVoo nao encontrado.\n");
+    if (aux == NULL) printf(VERMELHO "\nVoo não encontrado.\n" RESET);
 
     printf("\nPressione ENTER para voltar ao painel...");
     getchar();
 }
 
+// Alterar status
 void alterarStatus(nodo* inicio, int numero) {
     nodo* aux = inicio;
     while (aux != NULL) {
         if (aux->voo.numero == numero) {
             char opcaoStatus;
-            printf("\nSelecione o novo status:\n");
+            printf(NEGRITO "\nSelecione o novo status:\n" RESET);
             printf("%s1. Embarque%s\n", AZUL, RESET);
             printf("%s2. Desembarque%s\n", BRANCO, RESET);
             printf("%s3. Em voo%s\n", CIANO, RESET);
@@ -136,7 +140,7 @@ void alterarStatus(nodo* inicio, int numero) {
             printf("%s5. Aterrissado%s\n", VERDE, RESET);
             printf("%s6. Cancelado%s\n", VERMELHO, RESET);
             printf("%s7. Atrasado%s\n", MAGENTA, RESET);
-            printf("Opcao: ");
+            printf("Opção: ");
             scanf(" %c", &opcaoStatus); getchar();
 
             switch(opcaoStatus) {
@@ -147,16 +151,17 @@ void alterarStatus(nodo* inicio, int numero) {
                 case '5': strcpy(aux->voo.status, "Aterrissado"); break;
                 case '6': strcpy(aux->voo.status, "Cancelado"); break;
                 case '7': strcpy(aux->voo.status, "Atrasado"); break;
-                default: printf("Opcao invalida!\n"); return;
+                default: printf(VERMELHO "Opção inválida!\n" RESET); return;
             }
             printf("Status alterado para: %s%s%s\n", corStatus(aux->voo.status), aux->voo.status, RESET);
             return;
         }
         aux = aux->link;
     }
-    printf("Voo nao encontrado.\n");
+    printf(VERMELHO "Voo não encontrado.\n" RESET);
 }
 
+// Excluir voo
 void excluirVoo(nodo** inicio, int numero) {
     nodo *aux = *inicio, *anterior = NULL;
     while (aux != NULL && aux->voo.numero != numero) {
@@ -164,22 +169,23 @@ void excluirVoo(nodo** inicio, int numero) {
         aux = aux->link;
     }
     if (aux == NULL) {
-        printf("Voo nao encontrado.\n");
+        printf(VERMELHO "Voo não encontrado.\n" RESET);
         return;
     }
     char confirmacao;
-    printf("Confirmar exclusao do voo %d? (S/N): ", numero);
+    printf(NEGRITO "Confirmar exclusão do voo %d? (S/N): " RESET, numero);
     scanf(" %c", &confirmacao); getchar();
     if (confirmacao == 'S' || confirmacao == 's') {
         if (anterior == NULL) *inicio = aux->link;
         else anterior->link = aux->link;
         free(aux);
-        printf("Voo excluido com sucesso.\n");
+        printf(VERDE "Voo excluído com sucesso.\n" RESET);
     } else {
-        printf("Exclusao cancelada.\n");
+        printf(AMARELO "Exclusão cancelada.\n" RESET);
     }
 }
 
+// Preencher lista inicial
 void preencherVoosIniciais(nodo** lista) {
     Voo voos[7] = {
         {1001, "AZUL", "Fortaleza", 16, "08:20", "Partida"},
@@ -202,33 +208,33 @@ int vooExiste(nodo* inicio, int numero) {
     return 0;
 }
 
+// Principal
 int main() {
     nodo* lista = NULL;
     preencherVoosIniciais(&lista);
     char opcao;
     do {
         exibirPainel(lista);
-        printf("\n\n[A] Adicionar  [I] Info Voo  [S] Alterar Status  [E] Excluir  [X] Sair\n");
-        printf("Opcao: ");
+        printf(NEGRITO "\n\n[A] Adicionar  [I] Info Voo  [S] Alterar Status  [E] Excluir  [X] Sair\n" RESET);
+        printf("Opção: ");
         scanf(" %c", &opcao); getchar();
 
         if (opcao == 'A' || opcao == 'a') {
             Voo novo;
-
             do {
-                printf("Numero do voo: ");
+                printf("Número do voo: ");
                 scanf("%d", &novo.numero); getchar();
                 if (vooExiste(lista, novo.numero)) {
-                    printf("%s[Voo existente]%s Tente outro numero.\n", VERMELHO, RESET);
+                    printf(VERMELHO "[Voo existente]" RESET " Tente outro número.\n");
                 }
             } while (vooExiste(lista, novo.numero));
 
             printf("Companhia: "); fgets(novo.companhia, 20, stdin); strtok(novo.companhia, "\n");
             printf("Destino: "); fgets(novo.destino, 30, stdin); strtok(novo.destino, "\n");
-            printf("Portao: "); scanf("%d", &novo.portao); getchar();
+            printf("Portão: "); scanf("%d", &novo.portao); getchar();
             printf("Hora (HH:MM): "); fgets(novo.hora, 6, stdin); getchar(); strtok(novo.hora, "\n");
 
-            printf("\nSelecione o status:\n");
+            printf(NEGRITO "\nSelecione o status:\n" RESET);
             printf("%s1. Embarque%s\n", AZUL, RESET);
             printf("%s2. Desembarque%s\n", BRANCO, RESET);
             printf("%s3. Em voo%s\n", CIANO, RESET);
@@ -236,7 +242,7 @@ int main() {
             printf("%s5. Aterrissado%s\n", VERDE, RESET);
             printf("%s6. Cancelado%s\n", VERMELHO, RESET);
             printf("%s7. Atrasado%s\n", MAGENTA, RESET);
-            printf("Opcao: ");
+            printf("Opção: ");
             char opcaoStatus;
             scanf(" %c", &opcaoStatus); getchar();
 
@@ -248,7 +254,7 @@ int main() {
                 case '5': strcpy(novo.status, "Aterrissado"); break;
                 case '6': strcpy(novo.status, "Cancelado"); break;
                 case '7': strcpy(novo.status, "Atrasado"); break;
-                default: printf("Opcao invalida! Usando 'Embarque' como padrao.\n");
+                default: printf(AMARELO "Opção inválida. Usando 'Embarque'.\n" RESET);
                          strcpy(novo.status, "Embarque");
             }
 
@@ -256,17 +262,17 @@ int main() {
         }
         else if (opcao == 'I' || opcao == 'i') {
             int num;
-            printf("Numero do voo: "); scanf("%d", &num); getchar();
+            printf("Número do voo: "); scanf("%d", &num); getchar();
             mostrarVoo(lista, num);
         }
         else if (opcao == 'S' || opcao == 's') {
             int num;
-            printf("Numero do voo: "); scanf("%d", &num); getchar();
+            printf("Número do voo: "); scanf("%d", &num); getchar();
             alterarStatus(lista, num);
         }
         else if (opcao == 'E' || opcao == 'e') {
             int num;
-            printf("Numero do voo: "); scanf("%d", &num); getchar();
+            printf("Número do voo: "); scanf("%d", &num); getchar();
             excluirVoo(&lista, num);
         }
     } while (opcao != 'X' && opcao != 'x');
