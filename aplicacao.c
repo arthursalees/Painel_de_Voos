@@ -208,7 +208,7 @@ int vooExiste(nodo* inicio, int numero) {
     return 0;
 }
 
-// Principal
+// Função principal do Código
 int main() {
     nodo* lista = NULL;
     preencherVoosIniciais(&lista);
