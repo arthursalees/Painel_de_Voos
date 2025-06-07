@@ -20,7 +20,7 @@ O objetivo é praticar o uso de listas encadeadas, manipulação de strings e es
 - Exibição do painel colorido no terminal com os detalhes dos voos
 
 
----
+
 
 
 <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=150&color=gradient&gradientStart=0c1b2a&gradientEnd=1e0913&section=footer"/>
