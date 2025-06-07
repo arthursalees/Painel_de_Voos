@@ -4,7 +4,7 @@
 
 #define LIMITE_VOOS 10
 
-//Definição das Cores para os Status pelo Código ANSI
+//Definicao das Cores para os Status pelo Codigo ANSI
 #define RESET   "\033[0m"
 #define VERMELHO "\033[31m"
 #define VERDE   "\033[32m"
@@ -14,7 +14,7 @@
 #define CIANO   "\033[36m"
 #define BRANCO  "\033[37m"
 
-//Estrutura: Define como um voo é armazenado:
+//Estrutura: Define como um voo e armazenado:
 typedef struct {
     int numero;
     char companhia[20];
@@ -30,7 +30,7 @@ typedef struct nodo {
     struct nodo* link;
 } nodo;
 
-// Função para comparar as Horas 
+// Funcao para comparar as Horas 
 int compararHora(const char* h1, const char* h2) {
     int hora1, min1, hora2, min2;
     sscanf(h1, "%d:%d", &hora1, &min1);
@@ -39,7 +39,7 @@ int compararHora(const char* h1, const char* h2) {
     return min1 - min2;
 } 
 
-// Função para definir a Cor dos Status
+// Funcao para definir a Cor dos Status
 const char* corStatus(const char* status) {
     if (strcmp(status, "Partida") == 0) return AMARELO;
     if (strcmp(status, "Em voo") == 0) return CIANO;
@@ -51,7 +51,7 @@ const char* corStatus(const char* status) {
     return RESET;
 }
 
-// Inserção ordenada por horário
+// Insercao ordenada por horario
 void inserirOrdenado(nodo** inicio, Voo novoVoo) {
     nodo* novo = (nodo*)malloc(sizeof(nodo));
     novo->voo = novoVoo;
@@ -77,7 +77,7 @@ void inserirOrdenado(nodo** inicio, Voo novoVoo) {
         contador++;
         aux = aux->link;
     }
-    
+
     if (contador > LIMITE_VOOS) {
         nodo* remover = *inicio;
         printf("\n[Voo removido] O voo das %s para %s saiu da tabela.\n", remover->voo.hora, remover->voo.destino);
@@ -88,22 +88,23 @@ void inserirOrdenado(nodo** inicio, Voo novoVoo) {
 
 void exibirPainel(nodo* inicio) {
     printf("\033[H\033[J");
-    printf("\n%-6s %-6s %-15s %-20s %-6s %-15s\n", 
-        "Hora", "Voo", "Companhia", "Destino", "Portao", "Status");
-    printf("-------------------------------------------------------------------------------\n");
+    printf("\n|---------------------------------------------------------------------------------|\n");
+    printf("| Hora  | Voo   | Companhia       | Destino              | Porta | Status         |\n");
+    printf("|-------|-------|-----------------|----------------------|-------|----------------|\n");
 
     nodo* aux = inicio;
     while (aux != NULL) {
-        printf("%-6s %-6d %-15s %-20s %-6d %s%-15s%s\n",
+        printf("| %-5s | %-5d | %-15s | %-20s | %-5d | %s%-14s%s |\n",
             aux->voo.hora, aux->voo.numero, aux->voo.companhia,
             aux->voo.destino, aux->voo.portao, corStatus(aux->voo.status), aux->voo.status, RESET);
         aux = aux->link;
     }
+    printf("|---------------------------------------------------------------------------------|\n");
 }
 
 void mostrarVoo(nodo* inicio, int numero) {
     exibirPainel(inicio);
-    printf("\n---------------------------------------------------------------------------\n");
+    printf("\n--------------------------------------------------------------------------\n");
     printf("\nInformacoes do Voo Selecionado:\n");
 
     nodo* aux = inicio;
@@ -207,7 +208,7 @@ int main() {
     char opcao;
     do {
         exibirPainel(lista);
-        printf("\n[A] Adicionar  [I] Info Voo  [S] Alterar Status  [E] Excluir  [X] Sair\n");
+        printf("\n\n[A] Adicionar  [I] Info Voo  [S] Alterar Status  [E] Excluir  [X] Sair\n");
         printf("Opcao: ");
         scanf(" %c", &opcao); getchar();
 
@@ -218,7 +219,7 @@ int main() {
                 printf("Numero do voo: ");
                 scanf("%d", &novo.numero); getchar();
                 if (vooExiste(lista, novo.numero)) {
-                    printf("%s[Voo existente]%s Tente outro número.\n", VERMELHO, RESET);
+                    printf("%s[Voo existente]%s Tente outro numero.\n", VERMELHO, RESET);
                 }
             } while (vooExiste(lista, novo.numero));
 
@@ -226,7 +227,7 @@ int main() {
             printf("Destino: "); fgets(novo.destino, 30, stdin); strtok(novo.destino, "\n");
             printf("Portao: "); scanf("%d", &novo.portao); getchar();
             printf("Hora (HH:MM): "); fgets(novo.hora, 6, stdin); getchar(); strtok(novo.hora, "\n");
-            
+
             printf("\nSelecione o status:\n");
             printf("%s1. Embarque%s\n", AZUL, RESET);
             printf("%s2. Desembarque%s\n", BRANCO, RESET);
